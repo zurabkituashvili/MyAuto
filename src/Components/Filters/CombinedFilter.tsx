@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import FiltersInterface from "../Interfaces/FiltersInterface";
 import { ManufacturerInterface } from "../Interfaces/ManufacturerInterface";
 import { ProductInterface } from "../Interfaces/ProductInterface";
@@ -7,6 +7,7 @@ import { modelInterface } from "../Interfaces/ModelInterface";
 
 const CombinedFilter = (
   Products: ProductInterface[],
+  DealType:string,
   AllManufacturers: ManufacturerInterface[],
   AllModels: modelInterface[],
   Manufacturer: string[],
@@ -16,6 +17,9 @@ const CombinedFilter = (
   PriceRange: [number, number],
   allCategories: CarTypeInterface[]
 ): ProductInterface[] => {
+  
+
+
   const findManId = (id: string): string => {
     let res: string = "";
     AllManufacturers.forEach((e) => {
@@ -31,13 +35,19 @@ const CombinedFilter = (
     });
     return res;
   };
+
+
   const findCatId = (id: number): string => {
     let res: string = "";
     allCategories.forEach((e) => {
-      if (e.category_id == id) res = e.seo_title;
+      if (e.category_id == id) {res = e.seo_title};
     });
+
     return res;
   };
+
+  
+  
 
   const filterProducts = (products: ProductInterface[]): ProductInterface[] => {
     return products.filter((product) => {
@@ -52,7 +62,15 @@ const CombinedFilter = (
         return false;
       }
 
-      // Filter by model name
+      
+        if(DealType === "ქირავდება" && product.for_rent != true){
+          return false;
+        }
+        if(DealType === "იყიდება" && product.for_rent != false){
+          return false;
+        }
+      
+
       if (Model.length > 0 && !Model.includes(findModId(product.model_id))) {
         return false;
       }
@@ -68,10 +86,12 @@ const CombinedFilter = (
       // Filter by price range
       if (
         PriceRange &&
-        (product.price < PriceRange[0] || product.price > PriceRange[1])
+        (product.price_value < PriceRange[0] || product.price_value > PriceRange[1])
       ) {
         return false;
       }
+
+
 
       // All filters pass, include the product
       return true;
@@ -81,7 +101,6 @@ const CombinedFilter = (
   // Call the filterProducts function with the Products array
   const filteredProducts = filterProducts(Products);
 
-  console.log("I AM IN FILTER", filterProducts);
   return filteredProducts;
 };
 

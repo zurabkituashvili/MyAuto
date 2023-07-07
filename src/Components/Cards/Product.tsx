@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./productCSS.css";
 import { ProductInterface } from "../Interfaces/ProductInterface";
 import moment from "moment";
 import "moment/locale/ka";
+import axios from 'axios'
+
+
+import CarTypeContext from "../CarTypes/CarTypeContext";
+import { modelInterface } from "../Interfaces/ModelInterface";
+import { ManufacturerInterface } from "../Interfaces/ManufacturerInterface";
+
 moment.locale("ka");
 
 moment.updateLocale("ka", {
@@ -31,6 +38,60 @@ const ProductComponent: React.FC<Props> = ({ product }) => {
   const uploadTime = moment(product.order_date);
   const timeSinceUpload = moment.duration(moment().diff(uploadTime)).humanize();
 
+  // const [foundMan,setFoundMan] = useState<number>()
+
+  const {products,setProducts} = useContext(CarTypeContext);
+  const[wholeMan,setWholeMan] = useState<ManufacturerInterface[]>([])
+  const[model,setModel] = useState<String>();
+ 
+ 
+
+  const fetchManufacturers = async (): Promise<void> => {
+    try {
+      const response: Response = await fetch(
+        "https://static.my.ge/myauto/js/mans.json"
+      );
+      const data = await response.json();
+      setWholeMan(data);
+    } catch (error) {
+      console.error("Error while fetching categories", error);
+    }
+  };
+  useEffect(()=>{
+    fetchManufacturers()
+  },[])
+
+  const manName = wholeMan.filter((vehicle) => parseInt(vehicle.man_id) === product.man_id)[0]?.man_name;
+
+
+
+  useEffect(()=>{
+   
+    const manId = products.filter((car)=> car.car_id ==product.car_id )[0].man_id;
+    
+
+          fetch(`https://api2.myauto.ge/ka/getManModels?man_id=${manId}`)
+            .then((response) => response.json())
+            .then((data) => {
+              setModel(
+                data.data.find(
+                  (temp: any) =>
+                    temp.model_id ===
+                    products.filter((x) => x.car_id === product.car_id)[0]["model_id"]
+                ).model_name
+              );
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+  },[products,products.length])
+
+  const imageLink: string = `https://static.my.ge/myauto/photos/${product.photo}/thumbs/${product.car_id}_1.jpg?v=${product.photo_ver}`
+
+ 
+
+  
+
   return (
     <div className="Frame33744">
       <div className="Frame33518">
@@ -44,13 +105,13 @@ const ProductComponent: React.FC<Props> = ({ product }) => {
         <div className="carname">
           {product.for_rent === false ? (
             <span className="model">
-              {product.model_id} {product.car_model} &nbsp;&nbsp;
+              {manName} {model} &nbsp;&nbsp;
               <span className="year">{product.prod_year} წ</span>
             </span>
           ) : (
             <span className="model">
               <span className="forRent">ქირავდება</span>&nbsp;&nbsp;&nbsp;
-              {product.model_id} {product.car_model} &nbsp;&nbsp;
+              {manName} {model} &nbsp;&nbsp;
               <span className="year">{product.prod_year} წ</span>
             </span>
           )}

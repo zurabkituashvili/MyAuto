@@ -22,11 +22,9 @@
 
 .cartegoryy {
   justify-content: space-around;
-  position: absolute;
+  position: relative;
   width: 250px;
   height: 48px;
-  left: 435px;
-  top: 149px;
 
   background: #f9f9fb;
   border-radius: 11px 11px 0px 0px;

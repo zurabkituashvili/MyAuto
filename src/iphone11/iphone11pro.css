@@ -25,9 +25,13 @@
     bottom: 33.61%;
   }
 
+  .hidden {
+    display: none;
+  }
+
   .Group33738 {
     position: absolute;
-    width: 420px;
+    width: 375px;
     height: 2440px;
     left: 0px;
     top: 82px;
@@ -95,7 +99,7 @@
   .row {
     width: auto;
     position: relative;
-    left: -1080px;
+    left: -1098px;
     margin-bottom: 250px;
     background-color: #f6f2f2;
     margin-bottom: 80%;
@@ -264,21 +268,40 @@
     flex-direction: row;
     align-items: center;
     top: 25px;
-    left: 300px;
+    left: 275px;
     height: 32px;
     width: 83px;
     border-radius: 100px;
     padding: 8px 12px 10px 12px;
     background: rgb(253, 65, 0);
     text-align: center;
-    color: black;
+    color: rgb(255, 252, 252);
     font-weight: 500;
   }
 
-  .filterbg,
-  .cartegoryy,
-  .Frame33741,
-  .filtrisghilaki {
-    display: none;
+  .Frame33741 {
+    position: fixed;
+    background-color: #ffffff;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+  }
+
+  .Frame33738 {
+    position: relative;
+    width: 100%;
+    border-radius: 0px;
+    padding: 0px;
+    margin-top: 35px;
+    margin-left: 190px;
+  }
+
+  .closeMenuButton {
+    position: absolute;
+    display: block;
+    left: 10px;
+    font-size: larger;
   }
 }

@@ -7,19 +7,21 @@ type Props = {
 };
 
 const SortDropdown: React.FC<Props> = ({ wholeProducts }) => {
-  const [sortMethod, setSortMethod] = useState("option1");
+  
   const { products, setProducts } = useContext(CarTypeContext);
-  const [sortedData, setSortedData] = useState<ProductInterface[]>([]);
-  const [filterMethod, setFilterMethod] = useState("");
-  const [filteredData, setFilteredData] = useState<ProductInterface[]>([]);
 
+  
+  const [filtData,setFilteredData] = useState<ProductInterface[]>([])
+  
+  
+  const {visibleProd,setVisible,filterMethod,setFilterMethod,sortMethod,setSortMethod} = useContext(CarTypeContext)
+  
   useEffect(() => {
     let filteredData = [];
     const now = new Date();
-
     switch (filterMethod) {
       case "hour1":
-        filteredData = wholeProducts.filter((product) => {
+        filteredData = products.filter((product) => {
           const orderDate = new Date(product.order_date);
           const timeDifference =
             Math.abs(now.getTime() - orderDate.getTime()) / 3600000;
@@ -27,7 +29,7 @@ const SortDropdown: React.FC<Props> = ({ wholeProducts }) => {
         });
         break;
       case "hour3":
-        filteredData = wholeProducts.filter((product) => {
+        filteredData = products.filter((product) => {
           const orderDate = new Date(product.order_date);
           const timeDifference =
             Math.abs(now.getTime() - orderDate.getTime()) / 3600000;
@@ -35,7 +37,7 @@ const SortDropdown: React.FC<Props> = ({ wholeProducts }) => {
         });
         break;
       case "hour6":
-        filteredData = wholeProducts.filter((product) => {
+        filteredData = products.filter((product) => {
           const orderDate = new Date(product.order_date);
           const timeDifference =
             Math.abs(now.getTime() - orderDate.getTime()) / 3600000;
@@ -43,7 +45,7 @@ const SortDropdown: React.FC<Props> = ({ wholeProducts }) => {
         });
         break;
       case "hour9":
-        filteredData = wholeProducts.filter((product) => {
+        filteredData = products.filter((product) => {
           const orderDate = new Date(product.order_date);
           const timeDifference =
             Math.abs(now.getTime() - orderDate.getTime()) / 3600000;
@@ -51,7 +53,7 @@ const SortDropdown: React.FC<Props> = ({ wholeProducts }) => {
         });
         break;
       case "hour12":
-        filteredData = wholeProducts.filter((product) => {
+        filteredData = products.filter((product) => {
           const orderDate = new Date(product.order_date);
           const timeDifference =
             Math.abs(now.getTime() - orderDate.getTime()) / 3600000;
@@ -59,7 +61,7 @@ const SortDropdown: React.FC<Props> = ({ wholeProducts }) => {
         });
         break;
       case "hour24":
-        filteredData = wholeProducts.filter((product) => {
+        filteredData = products.filter((product) => {
           const orderDate = new Date(product.order_date);
           const timeDifference =
             Math.abs(now.getTime() - orderDate.getTime()) / 3600000;
@@ -67,14 +69,14 @@ const SortDropdown: React.FC<Props> = ({ wholeProducts }) => {
         });
         break;
       default:
-        filteredData = wholeProducts;
+        filteredData = products;
     }
-    setProducts(filteredData);
-    setFilteredData(filteredData);
-  }, [filterMethod, products, setProducts]);
+    setVisible(filteredData);
+    setFilteredData(filteredData)
+  }, [filterMethod]);
 
   useEffect(() => {
-    let sortedArray = [...products];
+    let sortedArray = [...filtData];
     if (sortMethod) {
       switch (sortMethod) {
         case "option1":
@@ -108,10 +110,11 @@ const SortDropdown: React.FC<Props> = ({ wholeProducts }) => {
       }
     }
     if (sortedArray.length > 0) {
-      setProducts(sortedArray);
-      setFilteredData(sortedArray);
+      setVisible(sortedArray);
+      setProducts(sortedArray)
+      // setFilteredData(sortedArray);
     }
-  }, [sortMethod, products, setProducts]);
+  }, [sortMethod]);
   return (
     <>
       <select

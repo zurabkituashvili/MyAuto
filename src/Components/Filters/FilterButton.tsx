@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CarTypeContext from "../CarTypes/CarTypeContext";
 import CombinedFilter from "./CombinedFilter";
 import "./FilterButton.css";
@@ -6,12 +6,15 @@ import { ProductInterface } from "../Interfaces/ProductInterface";
 
 type Props = {
   wholeProducts: ProductInterface[];
+  hideMenu: Function;
 };
 
-const FilterButton: React.FC<Props> = ({ wholeProducts }) => {
+const FilterButton: React.FC<Props> = ({ wholeProducts, hideMenu }) => {
   const {
     products,
+    sellType,
     setProducts,
+    setCurrentPage,
     manArr,
     modelArr,
     currentMan,
@@ -19,12 +22,20 @@ const FilterButton: React.FC<Props> = ({ wholeProducts }) => {
     cartegory,
     chosenCategories,
     PriceRange,
-    categories, // Add categories from context
+    categories,
+    visibleProd,
+    setVisible,
+   
+    setFilterMethod,
+   
+    setSortMethod
+    // Add categories from context
   } = useContext(CarTypeContext);
 
   const handleClick = (): void => {
     const filteredProducts = CombinedFilter(
       wholeProducts,
+      sellType,
       manArr,
       modelArr,
       currentMan,
@@ -35,7 +46,13 @@ const FilterButton: React.FC<Props> = ({ wholeProducts }) => {
       categories
     );
     setProducts(filteredProducts);
+    setVisible(filteredProducts)
+    setFilterMethod("")
+    setSortMethod("option1")
+    setCurrentPage(1);
+    hideMenu();
   };
+  
 
   return (
     <div className="filtrisghilaki">

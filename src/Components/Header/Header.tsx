@@ -69,27 +69,6 @@ const Header: React.FC = () => {
           </clipPath>
         </defs>
       </svg>
-      <div>
-        <button className="iphonefilter" onClick={handleClick}>
-          ძებნა
-        </button>
-
-        {showDivs ? (
-          <div>
-            {
-              <>
-                <div className=".recctangle"></div>
-                <div className=".filterbg"></div>
-                <div className=".cartegoryy"></div>
-                <div className=".Frame33741"></div>
-                <div className=".filtrisghilaki"></div>
-              </>
-            }
-          </div>
-        ) : (
-          <></>
-        )}
-      </div>
     </header>
   );
 };

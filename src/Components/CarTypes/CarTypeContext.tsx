@@ -6,6 +6,9 @@ import { modelInterface } from "../Interfaces/ModelInterface";
 import { ProductInterface } from "../Interfaces/ProductInterface";
 
 interface CategoryInterface {
+  sellType:string,
+  setSellType:(newSelltype:string)=>void,
+
   categories: CarTypeInterface[];
   setCategories: (newCategories: CarTypeInterface[]) => void;
 
@@ -32,9 +35,24 @@ interface CategoryInterface {
 
   products: ProductInterface[];
   setProducts: (newVal: ProductInterface[]) => void;
+
+  currentPage: number;
+  setCurrentPage: (page: number) => void;
+
+  visibleProd:ProductInterface[];
+  setVisible:(newProd:ProductInterface[])=>void
+
+  filterMethod:string
+  setFilterMethod:(val:string)=>void
+
+  sortMethod:string
+  setSortMethod:(val:string)=>void
 }
 
 const CarTypeContext = createContext<CategoryInterface>({
+  sellType:"",
+  setSellType:()=>{},
+
   categories: [],
   setCategories: () => {},
   cartegory: 0,
@@ -58,6 +76,19 @@ const CarTypeContext = createContext<CategoryInterface>({
 
   products: [],
   setProducts: () => {},
+
+  currentPage: 1,
+  setCurrentPage: () => {},
+
+  visibleProd:[],
+  setVisible:()=>{},
+
+  filterMethod:"",
+  setFilterMethod:()=>{},
+
+  sortMethod:"option1",
+  setSortMethod:()=>{}
+  
 });
 
 export default CarTypeContext;

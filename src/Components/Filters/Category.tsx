@@ -6,6 +6,7 @@ import "./Category.css";
 const Category: React.FC = () => {
   const { categories, setCategories } = useContext(CarTypeContext);
   const { chosenCategories, setChosenCategories } = useContext(CarTypeContext);
+  
   const [droppedCat, setDroppedCat] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -79,6 +80,8 @@ const Category: React.FC = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  
+  
 
   return (
     <div className="position-relative" ref={dropdownRef}>
@@ -130,7 +133,7 @@ const Category: React.FC = () => {
                     type="checkbox"
                     name={`category_${cat.title}`}
                     onMouseDown={handleCheckboxMouseDown}
-                    value={cat.title}
+                    value={cat.seo_title}
                     onChange={handleChangeCat}
                   />
                   <label

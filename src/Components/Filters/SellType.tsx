@@ -5,7 +5,7 @@ import CarTypeContext from "../CarTypes/CarTypeContext";
 
 const SellType: React.FC = () => {
   const [droppedSellType, setDroppedSellType] = useState<boolean>(false);
-  const [chosenSellType, setChosenSellType] = useState<string>("");
+  const {sellType, setSellType} = useContext(CarTypeContext);
   const [chosenSellSubTypes, setChosenSellSubTypes] = useState<string[]>([]);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -13,27 +13,15 @@ const SellType: React.FC = () => {
   const handleChangeSellType = (event: ChangeEvent<HTMLInputElement>): void => {
     const sellTypeValue = event.target.value;
     if (event.target.checked) {
-      setChosenSellType(sellTypeValue);
+      setSellType(sellTypeValue);
       setChosenSellSubTypes([]);
     } else {
-      setChosenSellType("");
+      setSellType("");
       setChosenSellSubTypes([]);
     }
   };
 
-  const handleChangeSellSubType = (
-    event: ChangeEvent<HTMLInputElement>
-  ): void => {
-    const subTypeValue = event.target.value;
-    if (event.target.checked) {
-      setChosenSellSubTypes([...chosenSellSubTypes, subTypeValue]);
-    } else {
-      const updatedSubTypes = chosenSellSubTypes.filter(
-        (val: string) => val !== subTypeValue
-      );
-      setChosenSellSubTypes(updatedSubTypes);
-    }
-  };
+
 
   const showDropdownSellType = (): void => {
     setDroppedSellType((prevState) => !prevState);
@@ -67,18 +55,21 @@ const SellType: React.FC = () => {
   };
 
   const resetVal = (): void => {
-    setChosenSellType("");
+    setSellType("");
     setChosenSellSubTypes([]);
     setDroppedSellType(false);
   };
 
   const renderInputValue = (): string => {
-    let value = chosenSellType;
+    let value = sellType;
     if (chosenSellSubTypes.length > 0) {
       value += " (" + chosenSellSubTypes.join(", ") + ")";
     }
     return value;
   };
+
+  console.log("SELLTyPE",sellType);
+  
 
   return (
     <div>
@@ -95,7 +86,7 @@ const SellType: React.FC = () => {
             readOnly
             value={renderInputValue()}
           />
-          {chosenSellType.length > 0 ? (
+          {sellType.length > 0 ? (
             <button className="btn input-group-append" onClick={resetVal}>
               X
             </button>
@@ -132,7 +123,7 @@ const SellType: React.FC = () => {
                   onMouseDown={handleCheckboxMouseDown}
                   value="იყიდება"
                   onChange={handleChangeSellType}
-                  checked={chosenSellType === "იყიდება"}
+                  checked={sellType === "იყიდება"}
                 />
                 <label className="form-check-label w-100" htmlFor="იყიდება">
                   იყიდება
@@ -146,78 +137,13 @@ const SellType: React.FC = () => {
                   onMouseDown={handleCheckboxMouseDown}
                   value="ქირავდება"
                   onChange={handleChangeSellType}
-                  checked={chosenSellType === "ქირავდება"}
+                  checked={sellType === "ქირავდება"}
                 />
                 <label className="form-check-label w-100" htmlFor="ქირავდება">
                   ქირავდება
                 </label>
               </div>
-              {chosenSellType === "ქირავდება" && (
-                <div className="pl-3">
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      name="დღიურად"
-                      onMouseDown={handleCheckboxMouseDown}
-                      value="დღიურად"
-                      onChange={handleChangeSellSubType}
-                      checked={chosenSellSubTypes.includes("დღიურად")}
-                    />
-                    <label className="form-check-label w-100" htmlFor="დღიურად">
-                      დღიურად
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      name="მძღოლით"
-                      onMouseDown={handleCheckboxMouseDown}
-                      value="მძღოლით"
-                      onChange={handleChangeSellSubType}
-                      checked={chosenSellSubTypes.includes("მძღოლით")}
-                    />
-                    <label className="form-check-label w-100" htmlFor="მძღოლით">
-                      მძღოლით
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      name="შესყიდვით"
-                      onMouseDown={handleCheckboxMouseDown}
-                      value="შესყიდვით"
-                      onChange={handleChangeSellSubType}
-                      checked={chosenSellSubTypes.includes("შესყიდვით")}
-                    />
-                    <label
-                      className="form-check-label w-100"
-                      htmlFor="შესყიდვით"
-                    >
-                      შესყიდვით
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      name="დაზღვეული"
-                      onMouseDown={handleCheckboxMouseDown}
-                      value="დაზღვეული"
-                      onChange={handleChangeSellSubType}
-                      checked={chosenSellSubTypes.includes("დაზღვეული")}
-                    />
-                    <label
-                      className="form-check-label w-100"
-                      htmlFor="დაზღვეული"
-                    >
-                      დაზღვეული
-                    </label>
-                  </div>
-                </div>
-              )}
+              
             </div>
           </div>
         )}

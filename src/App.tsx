@@ -39,11 +39,38 @@ const App: React.FC = () => {
 
   const [wholeProducts, setWholeProducts] = useState<ProductInterface[]>([]);
 
+  const [isHidden, setIsHidden] = useState(true);
+
+  const [sellType,setSellType] = useState("")
+
   //-------------------------------------------------------//
   const [currentPage, setCurrentPage] = useState(1);
+  const [visibleProd,setVisible] = useState<ProductInterface[]>([])
+
+  const [filterMethod, setFilterMethod] = useState("");
+  const [sortMethod, setSortMethod] = useState("option1");
+
   const itemsPerPage = 5;
 
-  const totalPage = Math.ceil(products.length / itemsPerPage);
+  const totalPage = Math.ceil(visibleProd.length / itemsPerPage);
+
+  const toggleHidden = () => {
+    setIsHidden(!isHidden);
+  };
+
+  const matchesMediaQuery = (mediaQuery: string) => {
+    if (typeof window !== "undefined") {
+      const mql = window.matchMedia(mediaQuery);
+      return mql.matches;
+    }
+    return false;
+  };
+
+  const isSmallScreen = matchesMediaQuery(
+    "only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)"
+  );
+
+  const isDivHidden = isSmallScreen && isHidden;
 
   const fetchCategories = async (): Promise<void> => {
     try {
@@ -82,6 +109,7 @@ const App: React.FC = () => {
 
         if (data.data.items.length > 0) {
           setProducts((prevProducts) => [...prevProducts, ...data.data.items]);
+          setVisible((prevProducts) => [...prevProducts, ...data.data.items])
           setWholeProducts((prevProducs) => [
             ...prevProducs,
             ...data.data.items,
@@ -102,22 +130,25 @@ const App: React.FC = () => {
     fetchProducts();
     fetchCategories();
     fetchManufacturers();
+    
   }, []);
 
-  const productsToDisplay = products.slice(
+  const productsToDisplay = visibleProd.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
   const handlePageClick = (pageNum: number) => setCurrentPage(pageNum);
 
-  if (categories.length === 0) {
+  if (wholeProducts.length < 300) {
     return <div>LOADING</div>;
   } else {
     return (
       <div className="searchResult">
         <CarTypeContext.Provider
           value={{
+            sellType,
+            setSellType,
             categories,
             setCategories,
             cartegory,
@@ -136,28 +167,64 @@ const App: React.FC = () => {
             setPriceRange,
             products,
             setProducts,
+            currentPage,
+            setCurrentPage,
+            visibleProd,
+            setVisible,
+            filterMethod,
+            setFilterMethod,
+            sortMethod,
+            setSortMethod
           }}
         >
           <Header />
-          <div className="filterbg">
+          {/* <div className="filterbg">
             <div className="recctangle"></div>
-          </div>
+          </div> */}
 
           <div className="Group33738">
             <SortDropdown wholeProducts={wholeProducts} />
             <p className="gancxadebebisraodenoba">
-              {products.length} განცხადება
+              {visibleProd.length} განცხადება
             </p>
           </div>
-          <CarTypeComp></CarTypeComp>
 
-          <div className="Frame33741">
+          <div>
+            <button className="iphonefilter" onClick={toggleHidden}>
+              ძებნა
+            </button>
+          </div>
+          <div className={`Frame33741 ${isDivHidden ? "hidden" : ""}`}>
+            <div className="closeMenuButton" onClick={toggleHidden}>
+              X
+            </div>
+
+            <CarTypeComp></CarTypeComp>
+
             <SellType />
             <Manufacturer></Manufacturer>
             <ModelInp></ModelInp>
             <Category></Category>
             <PriceFilter></PriceFilter>
+
+            <FilterButton
+              wholeProducts={wholeProducts}
+              hideMenu={toggleHidden}
+            />
           </div>
+          {/* <div className={`Frame33741 ${isDivHidden ? "hidden" : ""}`}>
+            <SellType />
+            <Manufacturer></Manufacturer>
+            <Category></Category>
+            <PriceFilter></PriceFilter>{" "}
+          </div> */}
+
+          {/* <div className="Frame33741">
+            <SellType />
+            <Manufacturer></Manufacturer>
+            <Category></Category>
+            <PriceFilter></PriceFilter>
+          </div> */}
 
           {productsToDisplay.map((product) => {
             return (
@@ -168,8 +235,6 @@ const App: React.FC = () => {
               </>
             );
           })}
-
-          <FilterButton wholeProducts={wholeProducts} />
 
           <Pagination
             currentPage={currentPage}
